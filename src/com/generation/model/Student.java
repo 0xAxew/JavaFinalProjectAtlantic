@@ -1,52 +1,49 @@
-package com.generation.model;
+package com.generation.service;
 
-import java.util.ArrayList;
-import java.util.Date;
+import com.generation.model.Course;
+import com.generation.model.Student;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Student
-    extends Person
-    implements Evaluation
+public class StudentService
 {
-    private double average;
+    private final Map<String, Student> students = new HashMap<>();
 
-    private final List<Course> courses = new ArrayList<>();
-
-    private final Map<String, Course> approvedCourses = new HashMap<>();
-
-    public Student( String id, String name, String email, Date birthDate )
+    public void subscribeStudent( Student student )
     {
-        super( id, name, email, birthDate );
+        students.put( student.getId(), student );
     }
 
-    public void enrollToCourse( Course course )
+    public Student findStudent( String studentId )
     {
-        //TODO implement this method
+        if ( students.containsKey( studentId ) )
+        {
+            return students.get( studentId );
+        }
+        return null;
     }
 
-    public void registerApprovedCourse( Course course )
+    public void showSummary() {
+        System.out.println("Summary of Students:");
+        for (Student student : students.values()) {
+            System.out.println("Student ID: " + student.getId());
+            System.out.println("Student Name: " + student.getName());
+            System.out.println("Enrolled Courses:");
+            for (Course course : student.getCourses()) {
+                System.out.println("- " + course.getName());
+            }
+            System.out.println();
+        }
+    }
+
+    public void enrollToCourse( String studentId, Course course )
     {
-        approvedCourses.put( course.getCode(), course );
+        if ( students.containsKey( studentId ) )
+        {
+            students.get( studentId ).enrollToCourse( course );
+        }
     }
 
 
-    public boolean isAttendingCourse( String courseCode )
-    {
-        //TODO implement this method
-        return false;
-    }
-
-    @Override
-    public double getAverage()
-    {
-        return average;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Student {" + super.toString() + "}";
-    }
 }

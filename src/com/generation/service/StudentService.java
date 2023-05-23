@@ -1,41 +1,55 @@
-package com.generation.service;
+package com.generation.model;
 
-import com.generation.model.Course;
-import com.generation.model.Student;
-
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class StudentService
+public class Student
+        extends Person
+        implements Evaluation
 {
-    private final Map<String, Student> students = new HashMap<>();
+    private double average;
 
-    public void subscribeStudent( Student student )
+    private final List<Course> courses = new ArrayList<>();
+
+    private final Map<String, Course> approvedCourses = new HashMap<>();
+
+    public Student( String id, String name, String email, Date birthDate )
     {
-        students.put( student.getId(), student );
+        super( id, name, email, birthDate );
     }
 
-    public Student findStudent( String studentId )
+    public void enrollToCourse( Course course )
     {
-        if ( students.containsKey( studentId ) )
-        {
-            return students.get( studentId );
+        courses.add(course);
+    }
+
+    public void registerApprovedCourse( Course course )
+    {
+        approvedCourses.put( course.getCode(), course );
+    }
+
+
+    public boolean isAttendingCourse(String courseCode) {
+        for (Course course : courses) {
+            if (course.getCode().equals(courseCode)) {
+                return true;
+            }
         }
-        return null;
+        return false;
     }
 
-    public void showSummary()
+    @Override
+    public double getAverage()
     {
-        //TODO implement
+        return average;
     }
 
-    public void enrollToCourse( String studentId, Course course )
+    @Override
+    public String toString()
     {
-        if ( students.containsKey( studentId ) )
-        {
-            students.get( studentId ).enrollToCourse( course );
-        }
+        return "Student {" + super.toString() + "}";
     }
-
-
 }
